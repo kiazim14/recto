@@ -17,12 +17,13 @@ spring:
       minimum-idle: 1
       pool-name: data-source
     url: jdbc:mysql://localhost:3306/keyist?useSSL=false&useUnicode=yes&characterEncoding=UTF-8
-    password: password
-    username: username
+    password: root
+    username: root
   jpa:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+        ddl-auto: update
         format_sql: true
   mvc:
     throw-exception-if-no-handler-found: true

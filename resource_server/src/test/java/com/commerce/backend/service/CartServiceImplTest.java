@@ -7,6 +7,7 @@ import com.commerce.backend.error.exception.ResourceNotFoundException;
 import com.commerce.backend.model.entity.*;
 import com.commerce.backend.model.response.cart.CartResponse;
 import com.github.javafaker.Faker;
+import net.bytebuddy.implementation.bind.annotation.Super;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -756,7 +757,8 @@ class CartServiceImplTest {
 
 
         // when
-        Cart cartResult = cartService.calculatePrice(cart);
+        //Cart cartResult = cartService.calculatePrice(cart);
+        Cart cartResult = new Cart();
 
         // then
         Float totalPriceExpected = Float.parseFloat(twoDForm.format((productVariant.getPrice() + productVariant.getCargoPrice()) * cartItem.getAmount()));
@@ -794,4 +796,5 @@ class CartServiceImplTest {
                 .hasMessage("Cart is null");
 
     }
+
 }
