@@ -1,10 +1,7 @@
 package com.commerce.backend.api;
 
 import com.commerce.backend.model.dto.ColorDTO;
-import com.commerce.backend.model.entity.Color;
-import com.commerce.backend.model.request.color.UpdateColorRequest;
 import com.commerce.backend.model.response.color.ProductColorResponse;
-import com.commerce.backend.model.response.user.UserResponse;
 import com.commerce.backend.service.ProductColorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -5,7 +5,6 @@ import com.commerce.backend.dao.ColorRepository;
 import com.commerce.backend.error.exception.ResourceNotFoundException;
 import com.commerce.backend.model.dto.ColorDTO;
 import com.commerce.backend.model.entity.Color;
-import com.commerce.backend.model.request.color.UpdateColorRequest;
 import com.commerce.backend.model.response.color.ProductColorResponse;
 import com.commerce.backend.service.cache.ProductColorCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,9 +64,9 @@ public class ProductColorServiceImpl implements ProductColorService {
     @Override
     public ProductColorResponse updateColor(ColorDTO colorDTO) {
         Color color = getColor();
-        color.setId(color.getId());
-        color.setName(color.getName());
-        color.setHex(color.getHex());
+        color.setId(colorDTO.getId());
+        color.setName(colorDTO.getName());
+        color.setHex(colorDTO.getHex());
         colorRepository.save(color);
         return productColorResponseConverter.apply(color);
     }

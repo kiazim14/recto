@@ -8,6 +8,9 @@ import lombok.Data;
 @AllArgsConstructor
 @Builder
 public class ColorDTO {
+    private Long id;
     private String name;
     private String hex;
+
+
 }
