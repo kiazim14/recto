@@ -9,6 +9,7 @@ import com.commerce.backend.model.entity.Cart;
 import com.commerce.backend.model.entity.CartItem;
 import com.commerce.backend.model.entity.ProductVariant;
 import com.commerce.backend.model.entity.User;
+import com.commerce.backend.model.request.cart.AddToCartRequest;
 import com.commerce.backend.model.request.cart.ConfirmCartRequest;
 import com.commerce.backend.model.response.cart.CartResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +43,9 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartResponse addToCart(Long productVariantId, Integer amount) {
+
         User user = userService.getUser();
         Cart cart = user.getCart();
-
         if (Objects.nonNull(cart) && Objects.nonNull(cart.getCartItemList()) && !cart.getCartItemList().isEmpty()) {
             Optional<CartItem> cartItem = cart.getCartItemList()
                     .stream()

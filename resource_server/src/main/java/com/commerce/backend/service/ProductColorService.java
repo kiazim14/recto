@@ -17,4 +17,6 @@ public interface ProductColorService {
     Color getColor();
 
     void deleteColor(Long id);
+
+    Object addToColor(String hex, String name);
 }

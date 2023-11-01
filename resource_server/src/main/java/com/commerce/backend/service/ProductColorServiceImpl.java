@@ -2,7 +2,6 @@ package com.commerce.backend.service;
 
 import com.commerce.backend.converter.color.ProductColorResponseConverter;
 import com.commerce.backend.dao.ColorRepository;
-import com.commerce.backend.error.exception.InvalidArgumentException;
 import com.commerce.backend.error.exception.ResourceNotFoundException;
 import com.commerce.backend.model.dto.ColorDTO;
 import com.commerce.backend.model.entity.Color;
@@ -48,7 +47,7 @@ public class ProductColorServiceImpl implements ProductColorService {
                 .collect(Collectors.toList());
     }
 
-
+    @Override
     public ProductColorResponse addToColor(ColorDTO colorDTO) {
         if (colorDTO.getName() == null || colorDTO.getHex() == null) {
             try {
@@ -94,6 +93,12 @@ public class ProductColorServiceImpl implements ProductColorService {
 
         colorRepository.deleteById(id);
     }
+
+    @Override
+    public ProductColorResponse addToColor(String name, String hex) {
+        return addToColor(ColorDTO.builder().build());
+    }
+
 
 }
 

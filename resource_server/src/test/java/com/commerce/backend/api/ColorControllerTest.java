@@ -1,5 +1,9 @@
 package com.commerce.backend.api;
 
+import com.commerce.backend.model.dto.ColorDTO;
+import com.commerce.backend.model.request.cart.AddToCartRequest;
+import com.commerce.backend.model.request.color.AddToColorRequest;
+import com.commerce.backend.model.response.cart.CartResponse;
 import com.commerce.backend.model.response.color.ProductColorResponse;
 import com.commerce.backend.service.ProductColorService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,6 +32,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -52,6 +57,29 @@ class ColorControllerTest {
     }
 
     @Test
+    void it_should_add_to_color() throws Exception {
+        ColorDTO colorDTO = new ColorDTO();
+        colorDTO.setName(faker.color().name());
+        colorDTO.setHex(faker.color().hex());
+
+        ProductColorResponse colorResponseExpected = new ProductColorResponse();
+
+        given(productColorService.addToColor(colorDTO)).willReturn(colorResponseExpected);
+        // when
+        MvcResult result = mockMvc.perform(post("/api/public/color")
+                        .content(objectMapper.writeValueAsString(colorDTO))
+                        .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().is2xxSuccessful())
+                        .andReturn();
+
+
+        // then
+        verify(productColorService, times(1)).addToColor(colorDTO);
+        then(result.getResponse().getContentAsString()).isEqualTo(objectMapper.writeValueAsString(colorResponseExpected));
+
+    }
+
+        @Test
     void it_should_get_all_colors() throws Exception {
 
         // given
