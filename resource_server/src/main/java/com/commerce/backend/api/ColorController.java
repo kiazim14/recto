@@ -39,4 +39,9 @@ public class ColorController extends PublicApiController {
         ProductColorResponse updateResponse = productColorService.updateColor(colorDTO);
         return new ResponseEntity<>(updateResponse, HttpStatus.OK);
     }
+    @DeleteMapping("{id}")
+    public ResponseEntity<String> deleteColor(@PathVariable("id") Long Id){
+        productColorService.deleteColor(Id);
+        return ResponseEntity.ok("color deleted successfully!.");
+    }
 }

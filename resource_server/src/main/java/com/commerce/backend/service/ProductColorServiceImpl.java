@@ -2,6 +2,7 @@ package com.commerce.backend.service;
 
 import com.commerce.backend.converter.color.ProductColorResponseConverter;
 import com.commerce.backend.dao.ColorRepository;
+import com.commerce.backend.error.exception.InvalidArgumentException;
 import com.commerce.backend.error.exception.ResourceNotFoundException;
 import com.commerce.backend.model.dto.ColorDTO;
 import com.commerce.backend.model.entity.Color;
@@ -24,6 +25,8 @@ public class ProductColorServiceImpl implements ProductColorService {
     private final ProductColorCacheService productColorCacheService;
     private final ProductColorResponseConverter productColorResponseConverter;
     private final ColorRepository colorRepository;
+    private ProductColorService productColorService;
+
 
     @Autowired
     public ProductColorServiceImpl(ProductColorCacheService productColorCacheService, ProductColorResponseConverter productColorResponseConverter, ColorRepository colorRepository) {
@@ -47,13 +50,13 @@ public class ProductColorServiceImpl implements ProductColorService {
 
 
     public ProductColorResponse addToColor(ColorDTO colorDTO) {
-//        if (colorDTO.getName() == null || colorDTO.getHex() == null) {
-//            try {
-//                throw new Exception("Name or hex is missing");
-//            } catch (Exception e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
+        if (colorDTO.getName() == null || colorDTO.getHex() == null) {
+            try {
+                throw new Exception("Name or hex is missing");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
         Color color = new Color();
         color.setName(colorDTO.getName());
         color.setHex(colorDTO.getHex());
@@ -71,7 +74,7 @@ public class ProductColorServiceImpl implements ProductColorService {
         return productColorResponseConverter.apply(color);
     }
 
-    private Color getColor() {
+    public Color getColor() {
         Optional<Color> color = Optional.of(new Color());
         if (!Objects.isNull(color.isPresent())) {
             colorRepository.findAll();
@@ -83,5 +86,14 @@ public class ProductColorServiceImpl implements ProductColorService {
             throw new AccessDeniedException("Invalid access");
         }
     }
+
+    @Override
+    public void deleteColor(Long id) {
+        Color color = colorRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("color not found with id : " + id));
+
+        colorRepository.deleteById(id);
+    }
+
 }
 
