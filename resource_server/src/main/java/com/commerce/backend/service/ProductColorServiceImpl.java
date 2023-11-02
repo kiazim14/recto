@@ -8,13 +8,10 @@ import com.commerce.backend.model.entity.Color;
 import com.commerce.backend.model.response.color.ProductColorResponse;
 import com.commerce.backend.service.cache.ProductColorCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -47,15 +44,14 @@ public class ProductColorServiceImpl implements ProductColorService {
                 .collect(Collectors.toList());
     }
 
-    @Override
     public ProductColorResponse addToColor(ColorDTO colorDTO) {
-        if (colorDTO.getName() == null || colorDTO.getHex() == null) {
-            try {
-                throw new Exception("Name or hex is missing");
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
+//        if (colorDTO.getName() == null || colorDTO.getHex() == null) {
+//            try {
+//                throw new Exception("Name or hex is missing");
+//            } catch (Exception e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
         Color color = new Color();
         color.setName(colorDTO.getName());
         color.setHex(colorDTO.getHex());
@@ -64,27 +60,17 @@ public class ProductColorServiceImpl implements ProductColorService {
     }
 
     @Override
-    public ProductColorResponse updateColor(ColorDTO colorDTO) {
-        Color color = getColor();
-        color.setId(colorDTO.getId());
+    public ProductColorResponse updateColor(long id, ColorDTO colorDTO) {
+        Color color = colorRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("color not exist with id: " + id));
+
         color.setName(colorDTO.getName());
         color.setHex(colorDTO.getHex());
+
         colorRepository.save(color);
         return productColorResponseConverter.apply(color);
     }
 
-    public Color getColor() {
-        Optional<Color> color = Optional.of(new Color());
-        if (!Objects.isNull(color.isPresent())) {
-            colorRepository.findAll();
-            if (color.isEmpty()) {
-                throw new ResourceNotFoundException("User not found");
-            }
-            return color.get();
-        } else {
-            throw new AccessDeniedException("Invalid access");
-        }
-    }
 
     @Override
     public void deleteColor(Long id) {
@@ -93,12 +79,5 @@ public class ProductColorServiceImpl implements ProductColorService {
 
         colorRepository.deleteById(id);
     }
-
-    @Override
-    public ProductColorResponse addToColor(String name, String hex) {
-        return addToColor(ColorDTO.builder().build());
-    }
-
-
 }
 

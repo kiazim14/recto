@@ -1,9 +1,7 @@
 package com.commerce.backend.api;
 
+import com.commerce.backend.dao.ColorRepository;
 import com.commerce.backend.model.dto.ColorDTO;
-import com.commerce.backend.model.request.cart.AddToCartRequest;
-import com.commerce.backend.model.request.color.AddToColorRequest;
-import com.commerce.backend.model.response.cart.CartResponse;
 import com.commerce.backend.model.response.color.ProductColorResponse;
 import com.commerce.backend.service.ProductColorService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
@@ -29,10 +28,9 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -47,9 +45,12 @@ class ColorControllerTest {
     ObjectMapper objectMapper;
     @MockBean
     private ProductColorService productColorService;
+
     @Autowired
     private MockMvc mockMvc;
     private Faker faker;
+    @Mock
+    private ColorRepository colorlRepository;
 
     @BeforeEach
     public void setUp() {
@@ -69,8 +70,8 @@ class ColorControllerTest {
         MvcResult result = mockMvc.perform(post("/api/public/color")
                         .content(objectMapper.writeValueAsString(colorDTO))
                         .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(status().is2xxSuccessful())
-                        .andReturn();
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
 
 
         // then
@@ -79,7 +80,7 @@ class ColorControllerTest {
 
     }
 
-        @Test
+    @Test
     void it_should_get_all_colors() throws Exception {
 
         // given
@@ -91,7 +92,7 @@ class ColorControllerTest {
 
         // when
         MvcResult result = mockMvc.perform(get("/api/public/colors")
-                .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
@@ -99,4 +100,29 @@ class ColorControllerTest {
         verify(productColorService, times(1)).findAll();
         then(result.getResponse().getContentAsString()).isEqualTo(objectMapper.writeValueAsString(productColorResponses));
     }
+
+    @Test
+    void it_should_put_to_color(long id) throws Exception {
+        ColorDTO colorDTO = new ColorDTO();
+        colorDTO.setName(faker.color().name());
+        colorDTO.setHex(faker.color().hex());
+
+        ProductColorResponse colorResponseExpected = new ProductColorResponse();
+
+        given(productColorService.updateColor(id, colorDTO)).willReturn(colorResponseExpected);
+        // when
+        MvcResult result = mockMvc.perform(put("/api/public/upcolor")
+                        .content(objectMapper.writeValueAsString(colorDTO))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+
+
+        // then
+        verify(productColorService, times(1)).updateColor(id, colorDTO);
+        then(result.getResponse().getContentAsString()).isEqualTo(objectMapper.writeValueAsString(colorResponseExpected));
+
+    }
+
+
 }

@@ -6,4 +6,5 @@ import lombok.Data;
 @Data
 public class ProductColorResponse {
     private ColorDTO color;
+
 }

@@ -34,9 +34,9 @@ public class ColorController extends PublicApiController {
         List<ProductColorResponse> productColors = productColorService.findAll();
         return new ResponseEntity<>(productColors, HttpStatus.OK);
     }
-    @PutMapping(value = "/upcolor")
-    public ResponseEntity<ProductColorResponse> updateColor(@RequestBody @Valid ColorDTO colorDTO) {
-        ProductColorResponse updateResponse = productColorService.updateColor(colorDTO);
+    @PutMapping("{id}")
+    public ResponseEntity<ProductColorResponse> updateColor(@PathVariable long id, @RequestBody @Valid ColorDTO colorDTO) {
+        ProductColorResponse updateResponse = productColorService.updateColor(id, colorDTO);
         return new ResponseEntity<>(updateResponse, HttpStatus.OK);
     }
     @DeleteMapping("{id}")

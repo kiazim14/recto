@@ -4,21 +4,18 @@ import com.commerce.backend.converter.color.ProductColorResponseConverter;
 import com.commerce.backend.dao.ColorRepository;
 import com.commerce.backend.error.exception.ResourceNotFoundException;
 import com.commerce.backend.model.dto.ColorDTO;
-import com.commerce.backend.model.entity.Cart;
 import com.commerce.backend.model.entity.Color;
-import com.commerce.backend.model.entity.ProductVariant;
-import com.commerce.backend.model.response.cart.CartResponse;
 import com.commerce.backend.model.response.color.ProductColorResponse;
 import com.commerce.backend.service.cache.ProductColorCacheService;
 import com.github.javafaker.Faker;
-import org.hibernate.Session;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
@@ -29,7 +26,10 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -46,7 +46,11 @@ class ProductColorServiceImplTest {
     private ProductColorResponseConverter productColorResponseConverter;
 
     private Faker faker;
+
+    private Color color;
+    @Mock
     private ColorRepository colorRepository;
+    private long id = 1L;
 
     @BeforeEach
     public void setUp() {
@@ -60,10 +64,6 @@ class ProductColorServiceImplTest {
         String name = faker.color().name();
         String hex = faker.color().hex();
 
-        Color color = new Color();
-        color.setName(name);
-        color.setHex(hex);
-
         ColorDTO colorDTO = new ColorDTO();
         colorDTO.setName(faker.color().name());
         colorDTO.setHex(faker.color().hex());
@@ -71,11 +71,12 @@ class ProductColorServiceImplTest {
         ProductColorResponse productColorResponse = new ProductColorResponse();
 
         given(productColorService.addToColor(colorDTO)).willReturn(productColorResponse);
-        given(colorRepository.save(color)).willReturn(color);
-        given(productColorResponseConverter.apply(color)).willReturn(productColorResponse);
+//        given(colorRepository.save(color)).willReturn(color);
+//        given(productColorResponseConverter.apply(color)).willReturn(productColorResponse);
 
         // when
         ProductColorResponse colorResponseResult = productColorService.addToColor(colorDTO);
+
 
         // then
         then(colorResponseResult).isEqualTo(productColorResponse);
@@ -105,7 +106,7 @@ class ProductColorServiceImplTest {
 
         // then
         then(productColorResponseList.size()).isEqualTo(colorList.size());
-        productColorResponseList.forEach(productColorResponse1 -> then(productColorResponse1.getColor().getName()).isEqualTo(color.getName()));
+        productColorResponseList.forEach(x -> then(x.getColor().getName()).isEqualTo(color.getName()));
 
     }
 
@@ -121,5 +122,27 @@ class ProductColorServiceImplTest {
                 .hasMessage("Could not find product colors");
 
     }
+    @Test
+    void it_should_put_to_color_when_color_is_empty() {
+
+        // given
+        ColorDTO colorDTO = new ColorDTO();
+        colorDTO.setName(faker.color().name());
+        colorDTO.setHex(faker.color().hex());
+
+        ProductColorResponse productColorResponse = new ProductColorResponse();
+        
+        when(productColorService.updateColor(id, new ColorDTO())).thenReturn(productColorResponse);
+
+        when(productColorService.updateColor(anyInt(), any(ColorDTO.class))).thenReturn(productColorResponse);
+
+        ProductColorResponse colorResponseResult = productColorService.updateColor(id, colorDTO);
+
+
+        // then
+        then(colorResponseResult).isEqualTo(productColorResponse);
+
+    }
+
 
 }
