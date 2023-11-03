@@ -22,7 +22,5 @@ public class ProductDTO {
     private Date dateCreated;
     private Date lastUpdated;
     private Integer unlimited;
-    private ProductCategory productCategory;
-    private List<ProductVariant> productVariantList;
 
 }
