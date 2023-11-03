@@ -1,5 +1,7 @@
 package com.commerce.backend.service;
 
+import com.commerce.backend.model.dto.ProductDTO;
+import com.commerce.backend.model.entity.Product;
 import com.commerce.backend.model.entity.ProductVariant;
 import com.commerce.backend.model.response.product.ProductDetailsResponse;
 import com.commerce.backend.model.response.product.ProductResponse;
@@ -25,4 +27,6 @@ public interface ProductService {
     List<ProductResponse> getInterested();
 
     List<ProductResponse> searchProductDisplay(String keyword, Integer page, Integer size);
+
+    Product addToProduct(ProductDTO productDTO);
 }

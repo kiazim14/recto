@@ -22,7 +22,7 @@ public class ColorController extends PublicApiController {
         this.productColorService = productColorService;
     }
 
-    @PostMapping(value = "/color")
+    @PostMapping(value = "/colors/color")
     public ResponseEntity<ProductColorResponse> addColor(@RequestBody @Valid ColorDTO colorDTO) {
 
         ProductColorResponse colored = productColorService.addToColor(colorDTO);

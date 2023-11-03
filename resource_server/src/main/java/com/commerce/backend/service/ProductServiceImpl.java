@@ -7,6 +7,8 @@ import com.commerce.backend.dao.ProductRepository;
 import com.commerce.backend.dao.ProductVariantRepository;
 import com.commerce.backend.error.exception.InvalidArgumentException;
 import com.commerce.backend.error.exception.ResourceNotFoundException;
+import com.commerce.backend.model.dto.CategoryDTO;
+import com.commerce.backend.model.dto.ProductDTO;
 import com.commerce.backend.model.entity.Product;
 import com.commerce.backend.model.entity.ProductVariant;
 import com.commerce.backend.model.response.product.ProductDetailsResponse;
@@ -169,6 +171,22 @@ public class ProductServiceImpl implements ProductService {
                 .stream()
                 .map(productResponseConverter)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Product addToProduct(ProductDTO productDTO) {
+        Product product = new Product();
+        product.setLastUpdated(productDTO.getLastUpdated());
+        product.setDateCreated(productDTO.getDateCreated());
+        product.setLongDesc(productDTO.getLongDesc());
+        product.setSku(productDTO.getSku());
+        product.setName(productDTO.getName());
+        product.setLastUpdated(productDTO.getLastUpdated());
+        product.setUrl(productDTO.getUrl());
+        product.setProductCategory(productDTO.getProductCategory());
+        product.setProductVariantList(productDTO.getProductVariantList());
+
+        return productRepository.save(product);
     }
 
 
