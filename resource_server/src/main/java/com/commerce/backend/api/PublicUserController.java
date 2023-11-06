@@ -30,10 +30,10 @@ public class PublicUserController extends PublicApiController {
     }
 
     @PostMapping(value = "/account/subscribe")
-    public ResponseEntity<User> addColor(@RequestBody @Valid UserDTO userDTO) {
+    public ResponseEntity<User> subscribe(@RequestBody @Valid UserDTO userDTO) {
 
-        User user1 = userService.addSubscibe(userDTO);
-        return new ResponseEntity<>(user1, HttpStatus.OK);
+        User users = userService.addSubscibe(userDTO);
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
     @PostMapping(value = "/account/registration")
     public ResponseEntity<HttpStatus> registerUser(@RequestBody @Valid RegisterUserRequest registerUserRequest) {

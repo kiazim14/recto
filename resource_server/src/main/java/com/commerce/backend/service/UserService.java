@@ -9,8 +9,6 @@ import com.commerce.backend.model.request.user.UpdateUserAddressRequest;
 import com.commerce.backend.model.request.user.UpdateUserRequest;
 import com.commerce.backend.model.response.user.UserResponse;
 
-import javax.validation.Valid;
-
 public interface UserService {
     User register(RegisterUserRequest registerUserRequest);
 
@@ -32,5 +30,5 @@ public interface UserService {
 
     Boolean getVerificationStatus();
 
-    User addSubscibe(@Valid UserDTO userDTO);
+    User addSubscibe(UserDTO userDTO);
 }
