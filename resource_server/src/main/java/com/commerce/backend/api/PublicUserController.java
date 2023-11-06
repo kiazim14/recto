@@ -31,9 +31,8 @@ public class PublicUserController extends PublicApiController {
 
     @PostMapping(value = "/account/subscribe")
     public ResponseEntity<User> subscribe(@RequestBody @Valid UserDTO userDTO) {
-
-        User users = userService.addSubscibe(userDTO);
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        User user1 = userService.addSubscibe(userDTO);
+        return new ResponseEntity<>(user1, HttpStatus.OK);
     }
     @PostMapping(value = "/account/registration")
     public ResponseEntity<HttpStatus> registerUser(@RequestBody @Valid RegisterUserRequest registerUserRequest) {
