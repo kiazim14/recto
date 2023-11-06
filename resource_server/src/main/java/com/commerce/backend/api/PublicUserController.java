@@ -1,8 +1,11 @@
 package com.commerce.backend.api;
 
 
+import com.commerce.backend.model.dto.ColorDTO;
+import com.commerce.backend.model.dto.UserDTO;
 import com.commerce.backend.model.entity.User;
 import com.commerce.backend.model.request.user.*;
+import com.commerce.backend.model.response.color.ProductColorResponse;
 import com.commerce.backend.service.TokenService;
 import com.commerce.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,12 @@ public class PublicUserController extends PublicApiController {
         this.tokenService = tokenService;
     }
 
+    @PostMapping(value = "/account/subscribe")
+    public ResponseEntity<User> addColor(@RequestBody @Valid UserDTO userDTO) {
+
+        User user1 = userService.addSubscibe(userDTO);
+        return new ResponseEntity<>(user1, HttpStatus.OK);
+    }
     @PostMapping(value = "/account/registration")
     public ResponseEntity<HttpStatus> registerUser(@RequestBody @Valid RegisterUserRequest registerUserRequest) {
         User user = userService.register(registerUserRequest);

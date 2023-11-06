@@ -4,6 +4,7 @@ import com.commerce.backend.converter.user.UserResponseConverter;
 import com.commerce.backend.dao.UserRepository;
 import com.commerce.backend.error.exception.InvalidArgumentException;
 import com.commerce.backend.error.exception.ResourceNotFoundException;
+import com.commerce.backend.model.dto.UserDTO;
 import com.commerce.backend.model.entity.User;
 import com.commerce.backend.model.request.user.PasswordResetRequest;
 import com.commerce.backend.model.request.user.RegisterUserRequest;
@@ -144,6 +145,25 @@ public class UserServiceImpl implements UserService {
     public Boolean getVerificationStatus() {
         User user = getUser();
         return user.getEmailVerified() == 1;
+    }
+
+    @Override
+    public User addSubscibe(UserDTO userDTO) {
+        User user = new User();
+        user.setAddress(userDTO.getAddress());
+        user.setEmail(userDTO.getEmail());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setState(userDTO.getState());
+        user.setRegistrationDate(userDTO.getRegistrationDate());
+        user.setZip(userDTO.getZip());
+        user.setPhone(userDTO.getPhone());
+        user.setCity(userDTO.getCity());
+        user.setEmailVerified(0);
+        user.setLastName(userDTO.getLastName());
+        user.setFirstName(userDTO.getFirstName());
+        user.setCountry(userDTO.getCountry());
+        return userRepository.save(user);
+
     }
 
 
