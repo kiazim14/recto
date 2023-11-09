@@ -1,5 +1,6 @@
 package com.commerce.backend.model.dto;
 
+import com.commerce.backend.model.entity.Cart;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,8 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class UserDTO {
+
+    private Cart cart;
 
     private String email;
 

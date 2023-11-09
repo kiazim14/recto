@@ -9,7 +9,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 
-
 @Component
 public class PasswordForgotListener implements ApplicationListener<OnPasswordForgotRequestEvent> {
 

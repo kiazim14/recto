@@ -1,10 +1,13 @@
 package com.commerce.backend.service;
 
 import com.commerce.backend.converter.user.UserResponseConverter;
+import com.commerce.backend.dao.CartRepository;
 import com.commerce.backend.dao.UserRepository;
 import com.commerce.backend.error.exception.InvalidArgumentException;
+import com.commerce.backend.error.exception.ResourceFetchException;
 import com.commerce.backend.error.exception.ResourceNotFoundException;
 import com.commerce.backend.model.dto.UserDTO;
+import com.commerce.backend.model.entity.Cart;
 import com.commerce.backend.model.entity.User;
 import com.commerce.backend.model.request.user.PasswordResetRequest;
 import com.commerce.backend.model.request.user.RegisterUserRequest;
@@ -17,8 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -26,14 +28,16 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserResponseConverter userResponseConverter;
+    private final CartRepository cartRepository;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            PasswordEncoder passwordEncoder,
-                           UserResponseConverter userResponseConverter) {
+                           UserResponseConverter userResponseConverter, CartRepository cartRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userResponseConverter = userResponseConverter;
+        this.cartRepository = cartRepository;
     }
 
     @Override
@@ -166,5 +170,22 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public List<User> findAll() {
 
+        List<User> user = (List<User>) userRepository.findAll();
+        if (user == null) {
+            throw new ResourceNotFoundException("Objet null");
+        }
+        for(User users: user) {
+            if (users.getCart() != null) {
+                cartRepository.findAll().forEach(System.out::println);
+            }
+        }
+
+       // user.parallelStream().map(User::getCart).forEach(System.out::println);
+        List<User> users = new ArrayList<>();
+    return user;
+    }
 }
+

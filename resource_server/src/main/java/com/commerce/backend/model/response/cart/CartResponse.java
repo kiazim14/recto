@@ -7,7 +7,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class CartResponse {
+public class CartResponse<C> {
     private List<CartItemDTO> cartItems;
     private DiscountDTO discount;
     private Float totalCartPrice;

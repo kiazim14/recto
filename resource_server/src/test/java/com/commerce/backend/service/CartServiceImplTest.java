@@ -7,7 +7,6 @@ import com.commerce.backend.error.exception.ResourceNotFoundException;
 import com.commerce.backend.model.entity.*;
 import com.commerce.backend.model.response.cart.CartResponse;
 import com.github.javafaker.Faker;
-import net.bytebuddy.implementation.bind.annotation.Super;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

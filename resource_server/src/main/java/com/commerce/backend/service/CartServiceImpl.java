@@ -4,12 +4,12 @@ import com.commerce.backend.converter.cart.CartResponseConverter;
 import com.commerce.backend.dao.CartRepository;
 import com.commerce.backend.error.exception.InvalidArgumentException;
 import com.commerce.backend.error.exception.ResourceNotFoundException;
+import com.commerce.backend.model.dto.CartDTO;
 import com.commerce.backend.model.dto.CartItemDTO;
 import com.commerce.backend.model.entity.Cart;
 import com.commerce.backend.model.entity.CartItem;
 import com.commerce.backend.model.entity.ProductVariant;
 import com.commerce.backend.model.entity.User;
-import com.commerce.backend.model.request.cart.AddToCartRequest;
 import com.commerce.backend.model.request.cart.ConfirmCartRequest;
 import com.commerce.backend.model.response.cart.CartResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,7 @@ public class CartServiceImpl implements CartService {
     private final ProductService productService;
     private final UserService userService;
     private final CartResponseConverter cartResponseConverter;
+    private Cart cart;
 
 
     @Autowired
@@ -151,6 +152,7 @@ public class CartServiceImpl implements CartService {
         if (cart == null) {
             return null;
         }
+
         return cartResponseConverter.apply(cart);
     }
 
@@ -259,6 +261,30 @@ public class CartServiceImpl implements CartService {
         cart.setTotalCargoPrice(roundTwoDecimals(cart.getTotalCargoPrice()));
         return cart;
     }
+
+    @Override
+    public Cart ecars(CartDTO cartDTO) {
+        Cart cart = new Cart();
+        //cart.setCartItemList(cartDTO.getCartItemList());
+        //cart.setDiscount(cartDTO.getDiscount());
+        //cart.setUser(cartDTO.getUser());
+        cart.setDateCreated(cartDTO.getDateCreated());
+        cart.setTotalCargoPrice(cartDTO.getTotalCargoPrice());
+        cart.setTotalCartPrice(cartDTO.getTotalCartPrice());
+        cart.setTotalPrice(cartDTO.getTotalPrice());
+      return cartRepository.save(cart);
+    }
+
+    @Override
+    public List<Cart> findAll() {
+        List<Cart> cart = (List<Cart>) cartRepository.findAll();
+        if (cart == null) {
+            throw new ResourceNotFoundException("Objet null");
+        }
+
+        return cart;
+    }
+
 
     private float roundTwoDecimals(float d) {
         DecimalFormat twoDForm = new DecimalFormat("#.##");

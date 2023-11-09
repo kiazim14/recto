@@ -1,8 +1,11 @@
 package com.commerce.backend.api;
 
 
+import com.commerce.backend.model.dto.CartDTO;
+import com.commerce.backend.model.entity.Cart;
 import com.commerce.backend.model.request.cart.*;
 import com.commerce.backend.model.response.cart.CartResponse;
+import com.commerce.backend.model.response.color.ProductColorResponse;
 import com.commerce.backend.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 public class CartController extends ApiController {
@@ -21,6 +25,16 @@ public class CartController extends ApiController {
         this.cartService = cartService;
     }
 
+    @PostMapping(value = "/cart/cars")
+    public ResponseEntity<Cart> supToCart(@RequestBody @Valid CartDTO cartDTO) {
+        Cart cartRes = cartService.ecars(cartDTO);
+        return new ResponseEntity<>(cartRes, HttpStatus.OK);
+    }
+    @GetMapping(value = "/cart/carsize")
+    public ResponseEntity<List<Cart>> getAllColors() {
+        List<Cart> cartAll = cartService.findAll();
+        return new ResponseEntity<>(cartAll, HttpStatus.OK);
+    }
     @PostMapping(value = "/cart")
     public ResponseEntity<CartResponse> addToCart(@RequestBody @Valid AddToCartRequest addToCartRequest) {
         CartResponse cartResponse = cartService.addToCart(addToCartRequest.getProductVariantId(), addToCartRequest.getAmount());
@@ -39,7 +53,8 @@ public class CartController extends ApiController {
         return new ResponseEntity<>(cartResponse, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/cart")
+
+    @GetMapping(value = "/cart/fetch")
     public ResponseEntity<CartResponse> fetchCart() {
         CartResponse cartResponse = cartService.fetchCart();
         return new ResponseEntity<>(cartResponse, HttpStatus.OK);

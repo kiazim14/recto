@@ -14,7 +14,7 @@ export class AccountService {
   }
 
   createAccount(email: string, password: string, passwordRepeat: string) {
-    return this.httpClient.post(this.publicUrl + '/registration', {
+    return this.httpClient.post(this.publicUrl + '/subscribe', {
       email,
       password,
       passwordRepeat
