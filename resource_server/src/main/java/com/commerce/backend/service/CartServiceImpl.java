@@ -2,6 +2,7 @@ package com.commerce.backend.service;
 
 import com.commerce.backend.converter.cart.CartResponseConverter;
 import com.commerce.backend.dao.CartRepository;
+import com.commerce.backend.dao.UserRepository;
 import com.commerce.backend.error.exception.InvalidArgumentException;
 import com.commerce.backend.error.exception.ResourceNotFoundException;
 import com.commerce.backend.model.dto.CartDTO;
@@ -29,17 +30,19 @@ public class CartServiceImpl implements CartService {
     private final UserService userService;
     private final CartResponseConverter cartResponseConverter;
     private Cart cart;
+    private final UserRepository userRepository;
 
 
     @Autowired
     public CartServiceImpl(CartRepository cartRepository,
                            ProductService productService,
                            UserService userService,
-                           CartResponseConverter cartResponseConverter) {
+                           CartResponseConverter cartResponseConverter, UserRepository userRepository) {
         this.cartRepository = cartRepository;
         this.productService = productService;
         this.userService = userService;
         this.cartResponseConverter = cartResponseConverter;
+        this.userRepository = userRepository;
     }
 
     @Override

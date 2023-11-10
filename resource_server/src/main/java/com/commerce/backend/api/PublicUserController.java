@@ -42,7 +42,11 @@ public class PublicUserController extends PublicApiController {
         List<User> response = userService.findAll();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
+    @GetMapping(value="/account/usercart")
+    public ResponseEntity<List<User>> userCart() {
+        List<User> res = userService.getUserCart();
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
     @PostMapping(value = "/account/registration")
     public ResponseEntity<HttpStatus> registerUser(@RequestBody @Valid RegisterUserRequest registerUserRequest) {
         User user = userService.register(registerUserRequest);

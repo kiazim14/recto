@@ -177,15 +177,15 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new ResourceNotFoundException("Objet null");
         }
-        for(User users: user) {
-            if (users.getCart() != null) {
-                cartRepository.findAll().forEach(System.out::println);
-            }
-        }
 
        // user.parallelStream().map(User::getCart).forEach(System.out::println);
-        List<User> users = new ArrayList<>();
     return user;
+    }
+
+    @Override
+    public List<User> getUserCart() {
+        List<User> user = new ArrayList<>();
+        return user;
     }
 }
 

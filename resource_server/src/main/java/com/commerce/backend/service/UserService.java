@@ -35,4 +35,6 @@ public interface UserService {
     User addSubscibe(UserDTO userDTO);
 
     List<User> findAll();
+
+    List<User> getUserCart();
 }
