@@ -47,8 +47,7 @@ public class PublicUserController extends PublicApiController {
     @GetMapping(value="/account/usercart")
     public ResponseEntity<List<User>> userCart() {
         List<User> response = userService.getUserCart();
-        //return new ResponseEntity<>(res, HttpStatus.OK);
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(response);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @PostMapping(value = "/account/registration")
     public ResponseEntity<HttpStatus> registerUser(@RequestBody @Valid RegisterUserRequest registerUserRequest) {
