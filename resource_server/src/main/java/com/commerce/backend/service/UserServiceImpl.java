@@ -1,19 +1,23 @@
 package com.commerce.backend.service;
 
+import ch.qos.logback.core.BasicStatusManager;
+import ch.qos.logback.core.joran.spi.ElementPath;
 import com.commerce.backend.converter.user.UserResponseConverter;
+import com.commerce.backend.dao.CartItemRepository;
 import com.commerce.backend.dao.CartRepository;
 import com.commerce.backend.dao.UserRepository;
 import com.commerce.backend.error.exception.InvalidArgumentException;
-import com.commerce.backend.error.exception.ResourceFetchException;
 import com.commerce.backend.error.exception.ResourceNotFoundException;
 import com.commerce.backend.model.dto.UserDTO;
 import com.commerce.backend.model.entity.Cart;
+import com.commerce.backend.model.entity.CartItem;
 import com.commerce.backend.model.entity.User;
 import com.commerce.backend.model.request.user.PasswordResetRequest;
 import com.commerce.backend.model.request.user.RegisterUserRequest;
 import com.commerce.backend.model.request.user.UpdateUserAddressRequest;
 import com.commerce.backend.model.request.user.UpdateUserRequest;
 import com.commerce.backend.model.response.user.UserResponse;
+import com.fasterxml.jackson.annotation.JacksonInject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +25,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -29,15 +35,17 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserResponseConverter userResponseConverter;
     private final CartRepository cartRepository;
+    private final CartItemRepository cartItemRepository;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            PasswordEncoder passwordEncoder,
-                           UserResponseConverter userResponseConverter, CartRepository cartRepository) {
+                           UserResponseConverter userResponseConverter, CartRepository cartRepository, CartItemRepository cartItemRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userResponseConverter = userResponseConverter;
         this.cartRepository = cartRepository;
+        this.cartItemRepository = cartItemRepository;
     }
 
     @Override
@@ -176,16 +184,69 @@ public class UserServiceImpl implements UserService {
         List<User> user = (List<User>) userRepository.findAll();
         if (user == null) {
             throw new ResourceNotFoundException("Objet null");
-        }
 
-       // user.parallelStream().map(User::getCart).forEach(System.out::println);
-    return user;
+        }
+        // user.parallelStream().map(User::getCart).forEach(System.out::println);
+        return user;
     }
 
     @Override
     public List<User> getUserCart() {
-        List<User> user = new ArrayList<>();
-        return user;
-    }
+        List<User> user = userRepository.getUserCart();
+        Cart cart = cartRepository.findAll().iterator().next();
+        List<User> result = new ArrayList<>();
+
+                for (User users: user) {
+                    User user1 = new User();
+                    user1.setId(users.getId());
+                    user1.setCountry(users.getCountry());
+                    user1.setCart(cart);
+                    user1.setFirstName(users.getFirstName());
+                    user1.setLastName(users.getLastName());
+                    user1.setEmail(users.getEmail());
+                    user1.setLastName(users.getLastName());
+                    user1.setCity(users.getCity());
+                    user1.setPhone(users.getPhone());
+                    user1.setZip(users.getZip());
+                    user1.setPassword(users.getPassword());
+                    user1.setEmailVerified(users.getEmailVerified());
+                    user1.setAddress(users.getAddress());
+                    user1.setRegistrationDate(users.getRegistrationDate());
+                    result.add(user1);
+
+                }
+
+        return result;
+        }
 }
+
+
+//    private Cart getCartList() {
+//        Cart cart1 = new Cart();
+//        List<Cart> cart = cartRepository.findByCart();
+//             for(Cart cars: cart){
+//                 cart1.setId(cars.getId());
+//                 cart1.setTotalCartPrice(cars.getTotalCartPrice());
+//                 cart1.setTotalPrice(cars.getTotalPrice());
+//                 cart1.setDateCreated(cars.getDateCreated());
+//                 cart1.setCartItemList(Collections.singletonList(getCartItemList()));
+//                 cart1.setTotalCargoPrice(cars.getTotalCargoPrice());
+//                 cart1.setUser(cars.getUser());
+//
+//        }
+//             return cart1;
+//    }
+
+//    private CartItem getCartItemList() {
+//        CartItem cartItem1 = new CartItem();
+//        List<CartItem> cartItem = cartItemRepository.findByCartItem();
+//        for (CartItem cartel : cartItem) {
+//            cartItem1.setCart(cartel.getCart());
+//            cartItem1.setProductVariant(cartel.getProductVariant());
+//            cartItem1.setAmount(cartel.getAmount());
+//            cartItem1.setId(cartel.getId());
+//        }
+//        return cartItem1;
+//    }
+
 

@@ -37,4 +37,5 @@ public interface UserService {
     List<User> findAll();
 
     List<User> getUserCart();
+
 }

@@ -10,6 +10,7 @@ import com.commerce.backend.service.TokenService;
 import com.commerce.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class PublicUserController extends PublicApiController {
@@ -44,8 +46,9 @@ public class PublicUserController extends PublicApiController {
     }
     @GetMapping(value="/account/usercart")
     public ResponseEntity<List<User>> userCart() {
-        List<User> res = userService.getUserCart();
-        return new ResponseEntity<>(res, HttpStatus.OK);
+        List<User> response = userService.getUserCart();
+        //return new ResponseEntity<>(res, HttpStatus.OK);
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(response);
     }
     @PostMapping(value = "/account/registration")
     public ResponseEntity<HttpStatus> registerUser(@RequestBody @Valid RegisterUserRequest registerUserRequest) {
