@@ -193,14 +193,25 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getUserCart() {
         List<User> user = userRepository.getUserCart();
-        Cart cart = cartRepository.findAll().iterator().next();
+        List<Cart> cart = (List<Cart>) cartRepository.findAll();
         List<User> result = new ArrayList<>();
 
                 for (User users: user) {
                     User user1 = new User();
+                    Cart cart1 = new Cart();
                     user1.setId(users.getId());
                     user1.setCountry(users.getCountry());
-                    user1.setCart(cart);
+                    for(Cart carts: cart) {
+                        cart1.setCartItemList(carts.getCartItemList());
+                        cart1.setTotalCartPrice(carts.getTotalCartPrice());
+                        cart1.setTotalCargoPrice(carts.getTotalCartPrice());
+                        cart1.setTotalPrice(carts.getTotalPrice());
+                        cart1.setUser(carts.getUser());
+                        cart1.setDiscount(carts.getDiscount());
+                        cart1.setId(carts.getId());
+                        cart1.setDateCreated(carts.getDateCreated());
+                    }
+                    user1.setCart(cart1);
                     user1.setFirstName(users.getFirstName());
                     user1.setLastName(users.getLastName());
                     user1.setEmail(users.getEmail());
